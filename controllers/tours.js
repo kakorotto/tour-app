@@ -1,5 +1,13 @@
 const Tour = require('../models/Tour');
 
+const catchAsync = (fn) => async (req, res, next) => {
+  try {
+    await fn(req, res, next);
+  } catch (err) {
+    console.log('Async err => ', err);
+  }
+};
+
 module.exports = {
   findTourById: async (res, req, next) => {
     const { id } = req.params;
@@ -12,21 +20,6 @@ module.exports = {
     }
     req.tour = tour;
     next();
-  },
-  getTourById: async (req, res) => {
-    const { id } = req.params;
-    try {
-      const data = await Tour.findById(id);
-      console.log('dsgfnbfdasfhgmsdafshj,fadsafmn');
-      console.log(data);
-
-      res.json({
-        status: 'success',
-        data,
-      });
-    } catch (error) {
-      res.status(500).json({ status: 'failure', message: error.message });
-    }
   },
 
   getAllTours: async (req, res) => {
@@ -53,6 +46,21 @@ module.exports = {
       }
 
       res.json({ status: 'success', data });
+    } catch (error) {
+      res.status(500).json({ status: 'failure', message: error.message });
+    }
+  },
+  getTourById: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const data = await Tour.findById(id);
+      console.log('dsgfnbfdasfhgmsdafshj,fadsafmn');
+      console.log(data);
+
+      res.json({
+        status: 'success',
+        data,
+      });
     } catch (error) {
       res.status(500).json({ status: 'failure', message: error.message });
     }
